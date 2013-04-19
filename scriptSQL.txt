@@ -1,0 +1,56 @@
+CREATE SCHEMA `libreria` ;
+
+CREATE  TABLE `libreria`.`utenti` (
+  `username` VARCHAR(8) NOT NULL ,
+  `password` VARCHAR(8) NULL ,
+  `ruolo` INT () NULL , 
+  PRIMARY KEY (`username`) );
+
+  CREATE  TABLE `libreria`.`autori` (
+  `codice_fiscale` VARCHAR(20) NOT NULL ,
+  `nome` VARCHAR(45) NULL ,
+  `cognome` VARCHAR(45) NULL ,
+  PRIMARY KEY (`codice_fiscale`) );
+
+  
+  CREATE  TABLE `libreria`.`ruoli` (
+  `id_ruolo` int() NOT NULL ,
+  `tipo_ruolo` VARCHAR(45) NULL ,
+  PRIMARY KEY (`id_ruolo`) );
+
+  
+  CREATE  TABLE `libreria`.`libri` (
+  `nome_libro` VARCHAR(40) NOT NULL ,
+  `casa_editrice` VARCHAR(45) NULL ,
+  `numero_pagine` INT() NULL ,
+  PRIMARY KEY (`nome_libro`) );
+
+  
+  
+  CREATE  TABLE `libreria`.`autori_libri` (
+  `id_autore` VARCHAR(20) NOT NULL ,
+  `id_libro`VARCHAR(40) NOT NULL );
+  
+  
+  ALTER TABLE `libreria`.`autori_libri` 
+  ADD CONSTRAINT `fk_autori_cf`
+  FOREIGN KEY (`id_autore` )
+  REFERENCES `libreria`.`autori` (`codice_fiscale` )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION, 
+  ADD CONSTRAINT `fk_libri_id`
+  FOREIGN KEY (`id_libro` )
+  REFERENCES `libreria`.`libri` (`nome_libro` )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION
+, ADD INDEX `fk_autori_cf_idx` (`id_autore` ASC) 
+, ADD INDEX `fk_libri_id_idx` (`id_libro` ASC) ;
+
+
+ALTER TABLE `libreria`.`utenti` 
+  ADD CONSTRAINT `fk_ruolo`
+  FOREIGN KEY (`ruolo` )
+  REFERENCES `libreria`.`ruoli` (`id_ruolo` )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION
+, ADD INDEX `fk_ruolo_idx` (`ruolo` ASC) ;
