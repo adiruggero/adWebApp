@@ -50,10 +50,20 @@ public class LoginServlet extends HttpServlet{
 				session.setAttribute("ruolo",ruolo);
 			
 			}
-			
 			request.setAttribute("Utente",utente);
-			RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
-			rd.forward(request,response);
+			if(ruolo.equals("Amministratore")){
+				
+				
+				RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
+				rd.forward(request,response);
+			}
+			
+			else{
+				
+				RequestDispatcher rd = request.getRequestDispatcher("HomeStand.jsp");
+				rd.forward(request,response);
+				
+			}
 			
 			
 	
