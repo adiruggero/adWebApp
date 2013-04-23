@@ -6,9 +6,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import java.io.IOException;
+
+import it.geek.libreria.factory.ServiceFactory;
 import it.geek.libreria.model.Utente;
-import it.geek.libreria.DAO.IDAO;
-import it.geek.libreria.DAO.impl.UtenteDAO;
 import java.util.List;
 
 
@@ -25,11 +25,9 @@ public class VisualizzaUtentiServlet extends HttpServlet{
 	public void doPost(HttpServletRequest request,HttpServletResponse response)
 					throws ServletException,IOException{
 		
-		IDAO dao = new UtenteDAO();
+		List<Utente> lUtenti = ServiceFactory.getUtenteService().getAll();
 		
-		List<Utente> lUtenti = dao.findAll();
-		
-		request.setAttribute("listUtenti",lUtenti);
+		request.setAttribute("listaUtenti",lUtenti);
 		
 		RequestDispatcher rd = request.getRequestDispatcher("viewAll.jsp");
 		rd.forward(request,response);

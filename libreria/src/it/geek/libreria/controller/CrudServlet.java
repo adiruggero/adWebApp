@@ -6,8 +6,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.List;
+import java.util.Vector;
+
+import it.geek.libreria.factory.ServiceFactory;
+import it.geek.libreria.model.Ruolo;
 import it.geek.libreria.model.Utente;
 import it.geek.libreria.DAO.IDAO;
+import it.geek.libreria.DAO.impl.RuoloDAO;
 import it.geek.libreria.DAO.impl.UtenteDAO;
 
 public class CrudServlet extends HttpServlet {
@@ -25,6 +31,9 @@ public class CrudServlet extends HttpServlet {
 		String operazione= request.getParameter("operazione");
 		
 		if(operazione.equals("inserisci")){
+			
+			List<Ruolo> lRuoli = ServiceFactory.getRuoloService().getAll();
+			request.setAttribute("listaRuoli", lRuoli);
 				
 			RequestDispatcher rd = request.getRequestDispatcher("insert.jsp");
 			rd.forward(request,response);
@@ -35,37 +44,41 @@ public class CrudServlet extends HttpServlet {
 		if(operazione.equals("cancella")){
 			
 			String username = request.getParameter("username");
-			IDAO dao = new UtenteDAO();
-			
-			Utente u = new Utente();
-			u.setUsername(username);
-			
-			boolean ret = dao.delete(u);
-			
-			if(ret == true){
-				
-				RequestDispatcher rd = request.getRequestDispatcher("delete.jsp");
-				rd.forward(request,response);
-			}
-			else{
-				
-				RequestDispatcher rd = request.getRequestDispatcher("errore.jsp");
-				rd.forward(request,response);
-			}
+			Utente utente = new Utente();
+			utente.setUsername(username);
+			ServiceFactory.getUtenteService().delete(utente);
+			RequestDispatcher rd = request.getRequestDispatcher("delete.jsp");
+			rd.forward(request,response);
+
 		}
 		
 		if(operazione.equals("modifica")){
 			
 				String username = request.getParameter("username");
 				
-				request.setAttribute("Utente",username);
+
 				
+				List<Ruolo> lRuoli = ServiceFactory.getRuoloService().getAll();
+				
+				
+				
+				request.setAttribute("Utente",username);
+				request.setAttribute("listaRuoli",lRuoli);
 				RequestDispatcher rd = request.getRequestDispatcher("update.jsp");
 				rd.forward(request,response);
 		
 			
 		}
 	
-	}
+		if(operazione.equals("visualizza")){
+				
+			List<Utente> lUtenti = ServiceFactory.getUtenteService().getAll();
+			request.setAttribute("listaUtenti",lUtenti);
+			RequestDispatcher rd = request.getRequestDispatcher("visualizza.jsp");
+			rd.forward(request,response);
+			
+		}
+		
+	}	
 	
 }

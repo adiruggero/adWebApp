@@ -2,7 +2,8 @@ package it.geek.libreria.DAO.impl;
 
 import it.geek.libreria.DAO.IDAO;
 import it.geek.libreria.model.Utente;
-import it.geek.libreria.service.MyConnectionJNDI;
+import it.geek.libreria.util.MyConnectionJNDI;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,24 +21,13 @@ public class UtenteDAO implements IDAO<Utente,String>{
 	private static Logger logger = Logger.getLogger(UtenteDAO.class);
 		
 		
-		public Utente findById(String id){
+		public Utente findById(String id,Connection c){
 			
-			Connection c = null;
-			
-			try{
-			
-				c  = MyConnectionJNDI.getConnection();
-				logger.info("Connessione effettuata");
-				
-			}catch(Exception e){
-				
-				logger.debug("Impossibile effettuare la connessione");
-			}
 			
 			PreparedStatement ps = null;
 			ResultSet rs = null;
 			Utente utente = null;
-			String sql = "SELECT u.username,u.password,r.tipo_ruolo FROM utenti u,ruoli r WHERE r.id_ruolo=u.ruolo AND u.username=?";
+			String sql = "SELECT u.username,u.password,u.nome,u.cognome,r.tipo_ruolo FROM utenti u,ruoli r WHERE r.id_ruolo=u.ruolo AND u.username=?";
 			
 			try{
 				
@@ -49,6 +39,8 @@ public class UtenteDAO implements IDAO<Utente,String>{
 					utente = new Utente();
 					utente.setUsername(rs.getString("username"));
 					utente.setPassword(rs.getString("password"));
+					utente.setNome(rs.getString("nome"));
+					utente.setCognome(rs.getString("cognome"));
 					utente.setRuolo(rs.getString("tipo_ruolo"));
 					
 					logger.info("Query eseguita");
@@ -56,7 +48,7 @@ public class UtenteDAO implements IDAO<Utente,String>{
 				}
 			}	
 			catch(Exception e){
-				logger.debug("Query non eseguita");
+				logger.error("Query non eseguita");
 				
 				e.printStackTrace();
 			}
@@ -65,7 +57,7 @@ public class UtenteDAO implements IDAO<Utente,String>{
 				try{
 					rs.close();
 				}catch(Exception e){
-					logger.debug("Impossibile chiudere il result set");
+					logger.error("Impossibile chiudere il result set");
 				}
 				
 				
@@ -73,38 +65,20 @@ public class UtenteDAO implements IDAO<Utente,String>{
 					
 					ps.close();
 				}catch(Exception e){
-					logger.debug("Impossibile chiudere il prepared statement");
-				}
-				
-				try{
-					c.close();
-				}catch(Exception e){
-					logger.debug("Impossibile chiudere la connection");
+					logger.error("Impossibile chiudere il prepared statement");
 				}
 			}
 				
 			return utente;
 		}
 	
-		public List<Utente> findAll(){
+		public List<Utente> findAll(Connection c){
 			
 			Utente utente = null;
-			Connection c = null;
-			List<Utente> lUtenti = new Vector<Utente>();
-			
-			try{
-				
-				c = MyConnectionJNDI.getConnection();
-				logger.info("Connessione effettuata");
-			}
-			catch(Exception e){
-				logger.debug("Exception");
-				e.printStackTrace();
-			}
-			
+			List<Utente> lUtenti = new Vector<Utente>();		
 			PreparedStatement ps = null;
 			ResultSet rs = null;
-			String sql = "SELECT u.username,u.password,r.tipo_ruolo FROM utenti u,ruoli r WHERE r.id_ruolo=u.ruolo";
+			String sql = "SELECT u.username,u.password,u.nome,u.cognome,r.tipo_ruolo FROM utenti u,ruoli r WHERE r.id_ruolo=u.ruolo";
 			
 			try{
 				
@@ -115,6 +89,8 @@ public class UtenteDAO implements IDAO<Utente,String>{
 					utente = new Utente();
 					utente.setUsername(rs.getString("username"));
 					utente.setPassword(rs.getString("password"));
+					utente.setNome(rs.getString("nome"));
+					utente.setCognome(rs.getString("cognome"));
 					utente.setRuolo(rs.getString("tipo_ruolo"));
 					lUtenti.add(utente);
 				}
@@ -129,56 +105,43 @@ public class UtenteDAO implements IDAO<Utente,String>{
 					rs.close();
 					
 				}catch(Exception e){
-					logger.debug("impossibile chiudere il result set");
+					logger.error("impossibile chiudere il result set");
 				}
 				
 				try{
 					ps.close();
 				}catch(Exception e){
-					logger.debug("Impossibile chiudere il prepared statement");
-				}
-				try{
-					c.close();
-				}catch(Exception e){
-					logger.debug("Impossibile chiudere la connessione");
+					logger.error("Impossibile chiudere il prepared statement");
 				}
 			}
 			return lUtenti;
 		}
 		
-		public boolean insert(Utente u){
+		public boolean insert(Utente u,Connection c){
 			
-			boolean ret = false;
-			Connection c = null;
-			
-			try{
-				c=MyConnectionJNDI.getConnection();
-				logger.info("Connessione effettuata");
-			}catch(Exception e){
-				logger.debug("Connessione non riuscita");
-				e.printStackTrace();
-			}
-			
+			boolean ret = false;			
 			PreparedStatement ps = null;
-			String sql = "INSERT INTO utenti(username,password,ruolo)VALUES(?,?,?)";
+			String sql = "INSERT INTO utenti(username,password,nome,cognome,ruolo)VALUES(?,?,?,?,?)";
 			
 			try{
 				ps = c.prepareStatement(sql);
 				ps.setString(1,u.getUsername());
 				ps.setString(2,u.getPassword());
+				ps.setString(3,u.getNome());
+				ps.setString(4,u.getCognome());
 				String ruolo = u.getRuolo();
 				logger.info(ruolo);
 				
-				if(ruolo.equals("Amministrazione")){
-					ps.setInt(3,1);
-					logger.info("Amministrazione");
+				if(ruolo.equals("Amministratore")){
+					ps.setInt(5,1);
+					logger.info("Amministratore");
 				}
 				else if(ruolo.equals("Standard")){
-					ps.setInt(3,2);
+					ps.setInt(5,2);
 					logger.info("Standard");
 				}
 				else{
-					ps.setInt(3,3);
+					ps.setInt(5,3);
 					logger.info("Ospite");
 				}
 				int ritorno = ps.executeUpdate();
@@ -189,12 +152,12 @@ public class UtenteDAO implements IDAO<Utente,String>{
 				
 				}else{
 				
-					logger.debug("Query non eseguita");
+					logger.error("Query non eseguita");
 				
 				}
 			}catch(Exception e){
 				
-				logger.debug("Errore durante l'esecuzione");
+				logger.error("Errore durante l'esecuzione");
 			
 			}
 			finally{
@@ -204,35 +167,16 @@ public class UtenteDAO implements IDAO<Utente,String>{
 					ps.close();
 				
 				}catch(Exception e){
-					logger.debug("impossibile chiudere il ps");
-					e.printStackTrace();
-				}
-				try{
-					c.close();
-					
-				}catch(Exception e){
-					logger.debug("impossibile chiudere la connessione");
+					logger.error("impossibile chiudere il ps");
 					e.printStackTrace();
 				}
 			}
 			return ret;
 		}
 
-		public boolean delete(Utente u){
+		public boolean delete(Utente u,Connection c){
 			
-			boolean ret = false;
-			Connection c = null;
-			
-			try{
-				
-				c = MyConnectionJNDI.getConnection();
-				logger.info("connessione effettuata");
-				
-			}catch(Exception e){
-				
-				logger.debug("Connessione non riuscita");
-			}
-			
+			boolean ret = false;	
 			PreparedStatement ps = null;
 			String sql = "DELETE FROM utenti WHERE username=?";
 			
@@ -249,12 +193,12 @@ public class UtenteDAO implements IDAO<Utente,String>{
 				}
 				else{
 					
-					logger.debug("delete non eseguita");
+					logger.error("delete non eseguita");
 				}
 				
 			}catch(Exception e){
 				
-				logger.debug("Errore nell'esecuzione");
+				logger.error("Errore nell'esecuzione");
 				e.printStackTrace();
 		
 			}
@@ -265,41 +209,24 @@ public class UtenteDAO implements IDAO<Utente,String>{
 					
 				}catch(Exception e){
 					
-					logger.debug("Impossibile chiudere il ps");
+					logger.error("Impossibile chiudere il ps");
 				
-				}
-				try{
-					c.close();
-				
-				}catch(Exception e){
-					
-					logger.debug("Impossibile chiudere la connessione");
 				}
 			}
 			
 			return ret;
 		}
 
-		public boolean update(Utente u,String oldUser){
+		public boolean update(Utente u,String oldUser,Connection c){
 			
-			boolean ret = false;
-			Connection c = null;
-			
-			try{
-				
-				c = MyConnectionJNDI.getConnection();
-				logger.info("Connessione update eseguita");
-				
-			}catch(Exception e){
-				
-				logger.debug("Connessione update non eseguita");
-			}
-			
+			boolean ret = false;			
 			PreparedStatement ps = null;
 			String sql = "UPDATE utenti SET";
 			
 			String username = u.getUsername();
 			String password = u.getPassword();
+			String nome = u.getNome();
+			String cognome = u.getCognome();
 			String ruolo = u.getRuolo();
 			
 			if(username!=null){
@@ -307,6 +234,12 @@ public class UtenteDAO implements IDAO<Utente,String>{
 			}
 			if(password!=null){
 				sql=sql+","+ "password='"+password+"'";
+			}
+			if(nome!=null){
+				sql=sql+","+ "nome='"+nome+"'";
+			}
+			if(cognome!=null){
+				sql=sql+","+ "cognome='"+cognome+"'";
 			}
 			if(ruolo!=null&&ruolo.equals("Amministratore")){
 				sql=sql+","+ "ruolo="+ 1;
@@ -329,7 +262,7 @@ public class UtenteDAO implements IDAO<Utente,String>{
 				}
 				
 			}catch(Exception e){
-				logger.debug("Update non eseguita");
+				logger.error("Update non eseguita");
 				e.printStackTrace();
 			}
 			
@@ -340,20 +273,11 @@ public class UtenteDAO implements IDAO<Utente,String>{
 				
 				}catch(Exception e){
 					
-					logger.debug("Impossibile chiudere il ps");
+					logger.error("Impossibile chiudere il ps");
 					e.printStackTrace();
 				
 				}
-				try{
-					
-					c.close();
-					
-				}catch(Exception e){
-					
-					logger.debug("impossibile chiudere la connessione");
-					e.printStackTrace();
-				
-				}
+
 			}
 			
 			return ret;

@@ -7,8 +7,8 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import it.geek.libreria.model.Utente;
-import it.geek.libreria.DAO.IDAO;
-import it.geek.libreria.DAO.impl.UtenteDAO;
+import it.geek.libreria.factory.ServiceFactory;
+import it.geek.libreria.service.UtenteService;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
@@ -29,41 +29,37 @@ public class LoginServlet extends HttpServlet{
 			String nome = request.getParameter("nome");
 		    String password = request.getParameter("password");
 			
-		    logger.info(nome);
-		    logger.info(password);
 		    
-			IDAO dao = new UtenteDAO();
-			Utente utente = (Utente) dao.findById(nome);
-			String username = utente.getUsername();
-			String password2 = utente.getPassword();
-			String ruolo = utente.getRuolo();
+			Utente utente = (Utente)ServiceFactory.getUtenteService().get(nome);
 			
-			logger.debug(username);
-			logger.debug(password2);
-			logger.debug(ruolo);
-				
+			if(utente==null){
 			
+				request.setAttribute("Messaggio","Username sbagliato");
+				RequestDispatcher rd = request.getRequestDispatcher("errore.jsp");
+				rd.forward(request,response);
+		
+			}
 			
-			if(ruolo!=null){
-				
-				HttpSession session = request.getSession();
-				session.setAttribute("ruolo",ruolo);
+			else if(!password.equals(utente.getPassword())){
+			
+				request.setAttribute("Messaggio", "Password sbagliato");
+				RequestDispatcher rd = request.getRequestDispatcher("errore.jsp");
+				rd.forward(request, response);
 			
 			}
-			request.setAttribute("Utente",utente);
-			if(ruolo.equals("Amministratore")){
-				
-				
+			else{
+
+				HttpSession session = request.getSession();
+				session.setAttribute("Utente", utente);
 				RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
 				rd.forward(request,response);
+				
+				
 			}
 			
-			else{
-				
-				RequestDispatcher rd = request.getRequestDispatcher("HomeStand.jsp");
-				rd.forward(request,response);
-				
-			}
+			
+			
+		    
 			
 			
 	

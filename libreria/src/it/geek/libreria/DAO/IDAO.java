@@ -1,13 +1,14 @@
 package it.geek.libreria.DAO;
 
+import java.sql.Connection;
 import java.util.List;
 
 public interface IDAO<E,K> {
 	
-	public E findById(K id);
-	public List<E> findAll();
-	public boolean insert(E id);
-	public boolean delete(E id);
-	public boolean update(E id,K id2);
+	public E findById(K id,Connection c);
+	public List<E> findAll(Connection c);
+	public boolean insert(E id,Connection c);
+	public boolean delete(E id, Connection c);
+	public boolean update(E id,K id2,Connection c);
 	
 }

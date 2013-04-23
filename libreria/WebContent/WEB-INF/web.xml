@@ -3,7 +3,7 @@
 <web-app>
 
 	<welcome-file-list>
-		<welcome-file>Login.html</welcome-file>
+		<welcome-file>login.html</welcome-file>
 	</welcome-file-list>
 
 	<servlet>
@@ -31,6 +31,12 @@
 			<servlet-class>it.geek.libreria.controller.UpdateServlet</servlet-class>
 	</servlet>
 	
+	<servlet>
+			<servlet-name>logout</servlet-name>
+			<servlet-class>it.geek.libreria.controller.LogoutServlet</servlet-class>
+	</servlet>
+	
+	
 	<servlet-mapping>
 			<servlet-name>update</servlet-name>
 			<url-pattern>/update</url-pattern>
@@ -54,7 +60,12 @@
 			<servlet-name>viewAll</servlet-name>
 			<url-pattern>/viewAll</url-pattern>	
 	</servlet-mapping>
-	
+
+	<servlet-mapping>
+			<servlet-name>logout</servlet-name>
+			<url-pattern>/logout</url-pattern>
+	</servlet-mapping>
+
   <resource-ref>
   	<description>Connection libreria</description>
   	<res-ref-name>jdbc/libreriaDB</res-ref-name>

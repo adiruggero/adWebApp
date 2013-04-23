@@ -11,15 +11,13 @@
 </head>
 <body>
 			<%
-			List<Utente> lUtenti = (List) request.getAttribute("listUtenti");
-			String ruolo = (String) session.getAttribute("ruolo");	
-			
+			List<Utente> lUtenti = (List) request.getAttribute("listaUtenti");	
 			%>
 				
 			
-			<h2><%=ruolo%></h2>
+			<jsp:include page="header.jsp"/>
 			<table border="2" align="center">
-			<H2><a href="crudServlet?operazione=inserisci">Inserisci un nuovo utente</a></H2>
+			<h4><a href="crudServlet?operazione=inserisci">Inserisci un nuovo utente</a></h4>
 				<tr>
 					<td>username</td><td>password</td><td>ruolo</td>
 				</tr>
@@ -30,6 +28,7 @@
 						<td><%=lUtenti.get(i).getRuolo() %></td>
 						<td><a href="crudServlet?operazione=cancella&username=<%=lUtenti.get(i).getUsername() %>">Cancella</a></td>
 						<td><a href="crudServlet?operazione=modifica&username=<%=lUtenti.get(i).getUsername() %>">Modifica</a></td>
+						<td><a href="crudServlet?operazione=visualizza">Visualizza</a></td>
 					</tr>
 				<%} %>	
 			</table>

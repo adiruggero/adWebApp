@@ -9,16 +9,11 @@
 </head>
 	<body>
 		
-		<% 
-			Utente utente = (Utente) request.getAttribute("Utente");
-			String username = utente.getUsername();
-			String ruolo =(String) session.getAttribute("ruolo");
-	
+		<%
+		String messaggio = (String)request.getAttribute("Messaggio");
 		%>
-			
-		<center> 
-				 <h3>Benvenuto <%=username%> </h3>  
-				 <h3>Effettuato l'accesso nel ruolo di <%=ruolo %></h3>
-		</center>
+		
+		Errore : <%= messaggio %>
+		
 	</body>
 </html>
