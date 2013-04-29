@@ -95,4 +95,11 @@ public class RuoloDAO implements IDAO<Ruolo,Integer> {
 		
 	}
 
+
+	public List<Ruolo> findByWhere(Ruolo r,Connection c){
+		List<Ruolo> lRuoli = null;
+		
+		return lRuoli;
+		
+	}
 }

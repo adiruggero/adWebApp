@@ -1,3 +1,4 @@
+
 package it.geek.libreria.DAO.impl;
 
 import it.geek.libreria.DAO.IDAO;
@@ -281,6 +282,14 @@ public class UtenteDAO implements IDAO<Utente,String>{
 			}
 			
 			return ret;
+		}
+		
+		public List<Utente> findByWhere(Utente u,Connection c){
+			
+			List<Utente> lUtenti = null;
+			
+			return lUtenti;
+			
 		}
 }
 

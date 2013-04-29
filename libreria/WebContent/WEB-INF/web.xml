@@ -37,6 +37,18 @@
 	</servlet>
 	
 	
+	<servlet>
+			<servlet-name>viewAutori</servlet-name>
+			<servlet-class>it.geek.libreria.controller.VisualizzaAutoriServlet</servlet-class>
+	</servlet>
+	
+	
+	
+	<servlet-mapping>
+			<servlet-name>viewAutori</servlet-name>
+			<url-pattern>/viewAutori</url-pattern>
+	</servlet-mapping>
+	
 	<servlet-mapping>
 			<servlet-name>update</servlet-name>
 			<url-pattern>/update</url-pattern>

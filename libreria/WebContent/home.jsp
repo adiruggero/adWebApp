@@ -18,11 +18,16 @@
 			if(ruolo.equals("Amministratore")){
 				%>
 				<center>
-				<a href="viewAll">Visualizza Autori</a>
+				<a href="viewAll">Visualizza Utenti</a>
 				</center>
 		<%	} %>
 			
-		
+			<br><br><br>
+			<center>
+			
+			<a href="visualizzaAutori.jsp">Visualizza Autori</a>
+			
+			</center>			
 		
 	</body>
 </html>

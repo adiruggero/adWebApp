@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:javaee="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <javaee:resource-ref>
+    <javaee:description>Prenotazioni DB Connection</javaee:description>
+    <javaee:res-ref-name>jdbc/prenotazioniDB</javaee:res-ref-name>
+    <javaee:res-type>javax.sql.DataSource</javaee:res-type>
+    <javaee:res-auth>Container</javaee:res-auth>
+  </javaee:resource-ref>
+  <welcome-file-list>
+    <welcome-file>ingresso.html</welcome-file>
+  </welcome-file-list>
+  
+  <servlet>
+   		 <servlet-name>Riconoscimento</servlet-name>
+    	<servlet-class>it.geek.prenotazioni.controller.RiconoscimentoServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+  		<servlet-name>VisualizzaCorsi</servlet-name>
+  		<servlet-class>it.geek.prenotazioni.controller.VisualizzaCorsiServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+  		 <servlet-name>Prenota</servlet-name>
+  		<servlet-class>it.geek.prenotazioni.controller.InserisciPrenotazioneServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+  		<servlet-name>Logout</servlet-name>
+  		<servlet-class>it.geek.prenotazioni.controller.LogoutServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+  		<servlet-name>VisualizzaPrenotazioni</servlet-name>
+  		<servlet-class>it.geek.prenotazioni.controller.VisualizzaPrenotazioniServlet</servlet-class>
+  </servlet>
+  
+  
+  <servlet>
+  		<servlet-name>DeletePrenotazioni</servlet-name>
+  		<servlet-class>it.geek.prenotazioni.controller.DeletePrenotazioniServlet</servlet-class>
+  </servlet>
+  
+  
+  <servlet-mapping>
+  		<servlet-name>DeletePrenotazioni</servlet-name>
+  		<url-pattern>/DeletePrenotazioni</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  		<servlet-name>VisualizzaPrenotazioni</servlet-name>
+  		<url-pattern>/VisualizzaPrenotazioni</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  		<servlet-name>Logout</servlet-name>
+  		<url-pattern>/Logout</url-pattern>
+  </servlet-mapping>	
+  
+  <servlet-mapping>
+  		<servlet-name>Prenota</servlet-name>
+  		<url-pattern>/Prenota</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  		<servlet-name>VisualizzaCorsi</servlet-name>
+  		<url-pattern>/VisualizzaCorsi</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>Riconoscimento</servlet-name>
+    <url-pattern>/home</url-pattern>
+  </servlet-mapping>
+</web-app>
